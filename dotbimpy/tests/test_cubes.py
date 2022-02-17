@@ -1,4 +1,4 @@
-from dotbimpy.file import *
+from dotbimpy import *
 
 
 def test_cubes():
