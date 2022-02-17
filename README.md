@@ -1,3 +1,3 @@
-# dotbimpy (Version 1.0.0)
+# dotbimpy (Version 0.0.1)
 
 Python library for dotbim.
