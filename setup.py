@@ -8,7 +8,7 @@ setup(
   author='Wojciech',
   author_email='w.radaczynski@gmail.com',
   url='https://github.com/paireks/dotbimpy',
-  download_url='',
+  download_url='https://github.com/paireks/dotbimpy/archive/refs/tags/v_0_0_1.tar.gz',
   keywords=[],
   install_requires=[
           'jsonpickle',
