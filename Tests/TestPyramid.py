@@ -1,9 +1,4 @@
-from File import File
-from Element import Element
-from Mesh import Mesh
-from Color import Color
-from Rotation import Rotation
-from Vector import Vector
+from dotbimpy.file import *
 
 
 def test_pyramid():
@@ -52,3 +47,7 @@ def test_pyramid():
 
     file = File("1.0.0", meshes=[mesh], elements=[element], info=file_info)
     file.save("Pyramid.bim")
+
+    read_file = file.read("Pyramid.bim")
+
+    assert read_file == file
