@@ -60,7 +60,7 @@ def test_cubes():
     blue_cube = Element(mesh_id=0,
                         color=Color(0, 0, 255, 10),
                         vector=Vector(x=100.0, y=100.0, z=100.0),
-                        rotation=Rotation(qx=-2.2, qy=-1.4, qz=1.5, qw=-1.2),
+                        rotation=Rotation(qx=2.2, qy=1.4, qz=1.5, qw=1.2),
                         guid="8501a5e3-4709-47d8-bd5d-33d745a435d5",
                         info={"Name": "Blue Cube"},
                         type="Brick")

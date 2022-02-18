@@ -145,10 +145,10 @@
             "guid": "8501a5e3-4709-47d8-bd5d-33d745a435d5",
             "rotation": {
                 "py/object": "dotbimpy.file.Rotation",
-                "qx": -2.2,
-                "qy": -1.4,
+                "qx": 2.2,
+                "qy": 1.4,
                 "qz": 1.5,
-                "qw": -1.2
+                "qw": 1.2
             },
             "vector": {
                 "py/object": "dotbimpy.file.Vector",
