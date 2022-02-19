@@ -71,7 +71,7 @@ file.save("Pyramid.bim")
 
 ### 3 cubes example
 
-![2022-02-18_16h08_03](https://user-images.githubusercontent.com/47977819/154712434-30b5d9ba-f714-4cd7-a452-d8c8ba18f361.png)
+![Cubes](https://user-images.githubusercontent.com/47977819/154802229-63284101-d12b-45eb-8b4a-ff7b4e8bdfe6.png)
 
 ```python
 from dotbimpy import *
@@ -119,7 +119,7 @@ mesh = Mesh(mesh_id=0, coordinates=coordinates, indices=faces_ids)
 red_cube = Element(mesh_id=0,
                    color=Color(255, 0, 0, 255),
                    vector=Vector(x=-100.0, y=-100.0, z=-100.0),
-                   rotation=Rotation(qx=0.1, qy=0.3, qz=0.4, qw=1.0),
+                   rotation=Rotation(qx=0.0, qy=0.0, qz=0.0, qw=1.0),
                    guid="9f61b565-06a2-4bef-8b72-f37091ab54d6",
                    info={"Name": "Red Cube"},
                    type="Brick")
@@ -135,7 +135,7 @@ green_cube = Element(mesh_id=0,
 blue_cube = Element(mesh_id=0,
                     color=Color(0, 0, 255, 10),
                     vector=Vector(x=100.0, y=100.0, z=100.0),
-                    rotation=Rotation(qx=2.2, qy=1.4, qz=1.5, qw=1.2),
+                    rotation=Rotation(qx=0.0, qy=0.0, qz=0.0, qw=1.0),
                     guid="8501a5e3-4709-47d8-bd5d-33d745a435d5",
                     info={"Name": "Blue Cube"},
                     type="Brick")
