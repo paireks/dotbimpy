@@ -44,7 +44,7 @@ def test_cubes():
     red_cube = Element(mesh_id=0,
                        color=Color(255, 0, 0, 255),
                        vector=Vector(x=-100.0, y=-100.0, z=-100.0),
-                       rotation=Rotation(qx=0.1, qy=0.3, qz=0.4, qw=1.0),
+                       rotation=Rotation(qx=0.0, qy=0.0, qz=0.0, qw=1.0),
                        guid="9f61b565-06a2-4bef-8b72-f37091ab54d6",
                        info={"Name": "Red Cube"},
                        type="Brick")
@@ -60,7 +60,7 @@ def test_cubes():
     blue_cube = Element(mesh_id=0,
                         color=Color(0, 0, 255, 10),
                         vector=Vector(x=100.0, y=100.0, z=100.0),
-                        rotation=Rotation(qx=2.2, qy=1.4, qz=1.5, qw=1.2),
+                        rotation=Rotation(qx=0.0, qy=0.0, qz=0.0, qw=1.0),
                         guid="8501a5e3-4709-47d8-bd5d-33d745a435d5",
                         info={"Name": "Blue Cube"},
                         type="Brick")
