@@ -74,6 +74,6 @@ def test_cubes():
 
     file.save("Cubes.bim")
 
-    read_file = file.read("Cubes.bim")
+    read_file = File.read("Cubes.bim")
 
     assert read_file == file

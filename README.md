@@ -152,12 +152,8 @@ file.save("Cubes.bim")
 
 ### Read file
 
-#### .bim file created using Python
-
-If .bim file was created using Python, then it can be opened and converted back into Python objects like this:
-
 ```python
-read_file = file.read("Pyramid.bim")
+read_file = File.read("Pyramid.bim")
 ```
 
 And then you can get all of the properties from it:
@@ -166,22 +162,3 @@ And then you can get all of the properties from it:
 version = read_file.schema_version
 ```
 
-#### .bim file created from other source
-
-If .bim file was created other way, then you can just deserialize it as any JSON file
-
-```python
-import json
-
-with open("Pyramid.bim") as bim_file:
-    data = bim_file.read()
-    file = json.loads(data)
-
-    print(file)
-```
-
-As you can see you get a dictionary this way, and then you can get some values from it
-
-```python
-version = file["schema_version"]
-```

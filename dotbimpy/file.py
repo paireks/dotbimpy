@@ -22,7 +22,7 @@ class File:
             raise Exception("Path should end up with .bim extension")
 
         with open(path, "w") as bim_file:
-            bim_file.write(jsonpickle.encode(self, indent=4))
+            bim_file.write(jsonpickle.encode(self, indent=4, unpicklable=False))
 
     @staticmethod
     def read(path):
@@ -30,8 +30,50 @@ class File:
             raise Exception("Path should end up with .bim extension")
 
         with open(path, "r") as bim_file:
-            file = jsonpickle.decode(bim_file.read())
+            json_dictionary = jsonpickle.decode(bim_file.read())
+            file = File.__convert_JSON_to_file(json_dictionary)
+
             return file
+
+    @staticmethod
+    def __convert_JSON_to_file(json_dictionary):
+
+        schema_version = json_dictionary["schema_version"]
+        elements = json_dictionary["elements"]
+        meshes = json_dictionary["meshes"]
+        created_info = json_dictionary["info"]
+
+        created_meshes = []
+        for i in meshes:
+            created_meshes.append(Mesh(
+                mesh_id=i["mesh_id"],
+                coordinates=i["coordinates"],
+                indices=i["indices"]
+            ))
+
+        created_elements = []
+        for i in elements:
+            created_elements.append(Element(
+                mesh_id=i["mesh_id"],
+                vector=Vector(x=i["vector"]["x"],
+                              y=i["vector"]["y"],
+                              z=i["vector"]["z"]),
+                rotation=Rotation(qx=i["rotation"]["qx"],
+                                  qy=i["rotation"]["qy"],
+                                  qz=i["rotation"]["qz"],
+                                  qw=i["rotation"]["qw"]),
+                info=i["info"],
+                color=Color(r=i["color"]["r"],
+                            g=i["color"]["g"],
+                            b=i["color"]["b"],
+                            a=i["color"]["a"]),
+                type=i["type"],
+                guid=i["guid"]
+            ))
+
+        file = File(schema_version=schema_version, meshes=created_meshes, elements=created_elements, info=created_info)
+
+        return file
 
 
 class Element:
