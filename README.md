@@ -1,4 +1,4 @@
-# dotbimpy (Version 0.0.2)
+# dotbimpy (Version 0.0.3)
 
 ## Description
 
@@ -12,7 +12,7 @@ pip install dotbimpy
 
 ## How it works?
 
-For json serialization and deserialization it uses jsonpickle: https://github.com/jsonpickle/jsonpickle
+For json serialization it uses jsonpickle: https://github.com/jsonpickle/jsonpickle
 jsonpickle license: https://github.com/jsonpickle/jsonpickle/blob/main/LICENSE
 
 ## Examples
