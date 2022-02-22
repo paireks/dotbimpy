@@ -1,4 +1,5 @@
 import jsonpickle
+import json
 
 
 class File:
@@ -30,7 +31,7 @@ class File:
             raise Exception("Path should end up with .bim extension")
 
         with open(path, "r") as bim_file:
-            json_dictionary = jsonpickle.decode(bim_file.read())
+            json_dictionary = json.loads(bim_file.read())
             file = File.__convert_JSON_to_file(json_dictionary)
 
             return file
