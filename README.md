@@ -10,11 +10,6 @@ Open-source python library for dotbim file format. Read more about dotbim here: 
 pip install dotbimpy
 ```
 
-## How it works?
-
-For json serialization it uses jsonpickle: https://github.com/jsonpickle/jsonpickle
-jsonpickle license: https://github.com/jsonpickle/jsonpickle/blob/main/LICENSE
-
 ## Examples
 
 ### Pyramid example
@@ -171,4 +166,8 @@ file.view()
 ```
 ![2022-02-23_23h49_52](https://user-images.githubusercontent.com/47977819/155422920-9f0a9aa0-d3d6-442b-a0b0-084acb7e0ea7.png)
 
+## Libraries used
 
+- For json serialization it uses jsonpickle: [Repo](https://github.com/jsonpickle/jsonpickle) [License](https://github.com/jsonpickle/jsonpickle/blob/main/LICENSE)
+- For quaternions it uses pyquaternion: [Repo](https://github.com/KieranWynn/pyquaternion) [License](https://github.com/KieranWynn/pyquaternion/blob/master/LICENSE.txt)
+- For plotting it uses plotly: [Repo](https://github.com/plotly/plotly.py) [License](https://github.com/plotly/plotly.py/blob/master/LICENSE.txt)
