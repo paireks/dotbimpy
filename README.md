@@ -1,4 +1,4 @@
-# dotbimpy (Version 0.0.3)
+# dotbimpy (Version 0.0.4)
 
 ## Description
 
@@ -169,4 +169,6 @@ If you want to view your file:
 ```python
 file.view()
 ```
+![2022-02-23_23h49_52](https://user-images.githubusercontent.com/47977819/155422920-9f0a9aa0-d3d6-442b-a0b0-084acb7e0ea7.png)
+
 
