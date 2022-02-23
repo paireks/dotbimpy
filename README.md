@@ -162,3 +162,11 @@ And then you can get all of the properties from it:
 version = read_file.schema_version
 ```
 
+### View file
+
+If you want to view your file:
+
+```python
+file.view()
+```
+

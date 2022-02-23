@@ -1,5 +1,8 @@
 import jsonpickle
 import json
+import plotly.graph_objects as go
+import pyquaternion
+import numpy as np
 
 
 class File:
@@ -25,6 +28,18 @@ class File:
         with open(path, "w") as bim_file:
             bim_file.write(jsonpickle.encode(self, indent=4, unpicklable=False))
 
+    def view(self):
+        geometries = []
+        for i in self.elements:
+            mesh = next((x for x in self.meshes if x.mesh_id == i.mesh_id), None)
+            geometries.append(self.__convert_dotbim_mesh_to_plotly(mesh_to_convert=mesh, element=i))
+
+        layout = go.Layout(scene=dict(aspectmode='data'))
+        fig = go.Figure(data=[], layout=layout)
+        for i in geometries:
+            fig.add_trace(i)
+        fig.show()
+
     @staticmethod
     def read(path):
         if path[-4:] != ".bim":
@@ -35,6 +50,47 @@ class File:
             file = File.__convert_JSON_to_file(json_dictionary)
 
             return file
+
+    @staticmethod
+    def __convert_dotbim_mesh_to_plotly(mesh_to_convert, element):
+        colorHex = '#%02x%02x%02x' % (element.color.r, element.color.g, element.color.b)
+        opacity = element.color.a / 255
+
+        x = []
+        y = []
+        z = []
+        counter = 0
+        while counter < len(mesh_to_convert.coordinates):
+            point = np.array([
+                mesh_to_convert.coordinates[counter],
+                mesh_to_convert.coordinates[counter + 1],
+                mesh_to_convert.coordinates[counter + 2]])
+
+            rotation = pyquaternion.Quaternion(
+                a=element.rotation.qw,
+                b=element.rotation.qx,
+                c=element.rotation.qy,
+                d=element.rotation.qz)
+
+            point_rotated = rotation.rotate(point)
+
+            x.append(point_rotated[0] + element.vector.x)
+            y.append(point_rotated[1] + element.vector.y)
+            z.append(point_rotated[2] + element.vector.z)
+            counter += 3
+
+        i = []
+        j = []
+        k = []
+        counter = 0
+        while counter < len(mesh_to_convert.indices):
+            i.append(mesh_to_convert.indices[counter])
+            j.append(mesh_to_convert.indices[counter + 1])
+            k.append(mesh_to_convert.indices[counter + 2])
+            counter += 3
+
+        return go.Mesh3d(x=x, y=y, z=z, i=i, j=j, k=k, color=colorHex, opacity=opacity, name=element.type,
+                         showscale=True)
 
     @staticmethod
     def __convert_JSON_to_file(json_dictionary):
