@@ -1,7 +1,7 @@
 from dotbimpy import *
 
 
-def test_cubes():
+def create_cubes_file():
     coordinates = [
         0.0, 0.0, 0.0,
         10.0, 0.0, 0.0,
@@ -71,9 +71,19 @@ def test_cubes():
                 meshes=[mesh],
                 elements=[red_cube, green_cube, blue_cube],
                 info=file_info)
+    return file
 
+
+def test_cubes():
+
+    file = create_cubes_file()
     file.save("Cubes.bim")
-
     read_file = File.read("Cubes.bim")
 
     assert read_file == file
+
+
+def test_view():
+
+    file = create_cubes_file()
+    file.view()
