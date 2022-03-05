@@ -6,9 +6,17 @@ Open-source Python library for dotbim file format. Read more about dotbim here: 
 
 ## Installation
 
+### Python
+
 ```cmd
 pip install dotbimpy
 ```
+
+### JupyterLab / Jupyter Notebooks
+
+To display models inside notebooks additional steps are required, as displaying of models is based on plotly. Check out them there:
+- JupyterLab: https://plotly.com/python/getting-started/#jupyterlab-support
+- Jupyter Notebooks: https://plotly.com/python/getting-started/#jupyter-notebook-support
 
 ## Examples
 
