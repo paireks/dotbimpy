@@ -176,6 +176,14 @@ file.view()
 ```
 ![2022-02-23_23h49_52](https://user-images.githubusercontent.com/47977819/155422920-9f0a9aa0-d3d6-442b-a0b0-084acb7e0ea7.png)
 
+### dotbimpy + cadquery
+
+Sometimes it's much easier to create B-REP and then convert it into mesh. For this purpose you can try cadquery: https://github.com/CadQuery/cadquery
+
+Example notebook that presents that technique is here: https://github.com/paireks/dotbimpy/blob/master/dotbimpy/other/WallsWithBeams.ipynb
+
+![2022-03-14_00h07_13](https://user-images.githubusercontent.com/47977819/158083248-5d2fb3c8-bf0f-439f-ae74-95035bc5cbff.png)
+
 ## Libraries used
 
 - For json serialization it uses jsonpickle: [Repo](https://github.com/jsonpickle/jsonpickle) [License](https://github.com/jsonpickle/jsonpickle/blob/main/LICENSE)
