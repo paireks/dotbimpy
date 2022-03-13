@@ -3,6 +3,7 @@
 ## Description
 
 Open-source Python library for dotbim file format. Read more about dotbim here: https://github.com/paireks/dotbim
+dotbim's website: https://dotbim.net/
 
 ## Installation
 
