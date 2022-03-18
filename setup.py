@@ -2,18 +2,19 @@ from distutils.core import setup
 setup(
   name='dotbimpy',
   packages=['dotbimpy'],
-  version='0.0.4',
+  version='0.0.5',
   license='MIT',
   description='Python library for dotbim',
   author='Wojciech',
   author_email='w.radaczynski@gmail.com',
   url='https://github.com/paireks/dotbimpy',
-  download_url='https://github.com/paireks/dotbimpy/archive/refs/tags/v_0_0_4.tar.gz',
+  download_url='https://github.com/paireks/dotbimpy/archive/refs/tags/v_0_0_5.tar.gz',
   keywords=[],
   install_requires=[
           'jsonpickle',
           'plotly',
-          'pyquaternion'
+          'pyquaternion',
+          'numpy'
       ],
   classifiers=[
     'Development Status :: 3 - Alpha',
@@ -23,6 +24,7 @@ setup(
     'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
-    'Programming Language :: Python :: 3.9'
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10'
   ],
 )
