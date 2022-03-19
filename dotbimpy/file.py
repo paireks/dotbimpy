@@ -3,6 +3,7 @@ import json
 import plotly.graph_objects as go
 import pyquaternion
 import numpy as np
+import copy
 
 
 class File:
@@ -20,6 +21,43 @@ class File:
                and self.meshes == other.meshes \
                and self.elements == other.elements \
                and self.info == other.info
+
+    def __add__(self, other):
+        if not isinstance(other, File):
+            return NotImplemented
+
+        new_meshes = []
+        new_elements = []
+        new_schema_version = self.schema_version
+        new_file_info = self.info.copy()
+
+        max_mesh_id = 0
+        for i in self.meshes:
+            if max_mesh_id < i.mesh_id:
+                max_mesh_id = i.mesh_id
+            new_meshes.append(copy.deepcopy(i))
+
+        for i in self.elements:
+            new_elements.append(copy.deepcopy(i))
+
+        for i in other.meshes:
+            new_id = i.mesh_id + max_mesh_id + 1
+            new_meshes.append(Mesh(new_id, i.coordinates.copy(), i.indices.copy()))
+
+        for i in other.elements:
+            new_id = i.mesh_id + max_mesh_id + 1
+            new_elements.append(Element(mesh_id=new_id,
+                                        color=copy.deepcopy(i.color),
+                                        rotation=copy.deepcopy(i.rotation),
+                                        vector=copy.deepcopy(i.vector),
+                                        info=i.info.copy(),
+                                        type=i.type,
+                                        guid=i.guid))
+
+        return File(schema_version=new_schema_version,
+                    info=new_file_info,
+                    meshes=new_meshes,
+                    elements=new_elements)
 
     def save(self, path):
         if path[-4:] != ".bim":
@@ -155,6 +193,17 @@ class Element:
                and self.type == other.type \
                and self.mesh_id == other.mesh_id
 
+    def equals_without_id(self, other):
+        if not isinstance(other, Element):
+            return NotImplemented
+
+        return self.info == other.info \
+               and self.color == other.color \
+               and self.guid == other.guid \
+               and self.rotation == other.rotation \
+               and self.vector == other.vector \
+               and self.type == other.type
+
 
 class Color:
     def __init__(self, r, g, b, a):
@@ -181,6 +230,12 @@ class Mesh:
             return NotImplemented
 
         return self.mesh_id == other.mesh_id and self.coordinates == other.coordinates and self.indices == other.indices
+
+    def equals_without_id(self, other):
+        if not isinstance(other, Mesh):
+            return NotImplemented
+
+        return self.coordinates == other.coordinates and self.indices == other.indices
 
 
 class Rotation:
