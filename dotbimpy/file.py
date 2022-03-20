@@ -193,7 +193,7 @@ class Element:
                and self.type == other.type \
                and self.mesh_id == other.mesh_id
 
-    def equals_without_id(self, other):
+    def equals_without_mesh_id(self, other):
         if not isinstance(other, Element):
             return NotImplemented
 
@@ -231,7 +231,7 @@ class Mesh:
 
         return self.mesh_id == other.mesh_id and self.coordinates == other.coordinates and self.indices == other.indices
 
-    def equals_without_id(self, other):
+    def equals_without_mesh_id(self, other):
         if not isinstance(other, Mesh):
             return NotImplemented
 
