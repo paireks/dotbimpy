@@ -1,4 +1,4 @@
-# dotbimpy (Version 0.0.5)
+# dotbimpy (Version 0.0.6)
 
 ## Description
 
@@ -175,6 +175,15 @@ If you want to view your file:
 file.view()
 ```
 ![2022-02-23_23h49_52](https://user-images.githubusercontent.com/47977819/155422920-9f0a9aa0-d3d6-442b-a0b0-084acb7e0ea7.png)
+
+
+### Merge files
+
+If you want to merge two files together:
+
+```python
+merged_file = file_a + file_b
+```
 
 ### dotbimpy + cadquery
 
