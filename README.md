@@ -189,9 +189,13 @@ merged_file = file_a + file_b
 
 Sometimes it's much easier to create B-REP and then convert it into mesh. For this purpose you can try cadquery: https://github.com/CadQuery/cadquery
 
-Example notebook that presents that technique is here: https://github.com/paireks/dotbimpy/blob/master/dotbimpy/other/WallsWithBeams.ipynb
+Example notebook 1: https://github.com/paireks/dotbimpy/blob/master/dotbimpy/other/WallsWithBeams.ipynb
 
 ![2022-03-14_00h07_13](https://user-images.githubusercontent.com/47977819/158083248-5d2fb3c8-bf0f-439f-ae74-95035bc5cbff.png)
+
+Example notebook 2: https://github.com/paireks/dotbimpy/blob/master/dotbimpy/other/Truss.ipynb
+
+![2022-03-20_13h18_47](https://user-images.githubusercontent.com/47977819/159161776-a752df76-cd83-4bef-9404-8961f1043003.png)
 
 ## Libraries used
 
