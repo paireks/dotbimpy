@@ -20,6 +20,14 @@ To display models inside notebooks additional steps are required, as displaying 
 - JupyterLab: https://plotly.com/python/getting-started/#jupyterlab-support
 - Jupyter Notebooks: https://plotly.com/python/getting-started/#jupyter-notebook-support
 
+### Google colab
+
+To use it in Google colab add this line at the beggining of the notebook:
+
+```cmd
+!pip install dotbimpy
+```
+
 ## Examples
 
 ### Pyramid example
