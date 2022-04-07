@@ -193,6 +193,16 @@ If you want to merge two files together:
 merged_file = file_a + file_b
 ```
 
+### dotbimpy + trimesh
+
+There is a wonderful library called trimesh: https://github.com/mikedh/trimesh, that has a lot of features regarding meshes. Because .bim files relies on meshes only, therefore you can find this library really helpful for many tasks related dotbim, like:
+
+- converting dotbim's geometries from and to different file formats
+- faster preview of .bim files: https://trimsh.org/trimesh.scene.html
+- clash detection: https://trimsh.org/trimesh.collision.html?highlight=collision#module-trimesh.collision
+![2022-04-07_23h32_50](https://user-images.githubusercontent.com/47977819/162323603-8d722656-dda9-4c7a-add9-b10142223b1d.png)
+- creating primitives
+
 ### dotbimpy + cadquery
 
 Sometimes it's much easier to create B-REP and then convert it into mesh. For this purpose you can try cadquery: https://github.com/CadQuery/cadquery
