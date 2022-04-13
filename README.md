@@ -201,7 +201,8 @@ There is a wonderful library called trimesh: https://github.com/mikedh/trimesh, 
 - faster preview of .bim files: https://trimsh.org/trimesh.scene.html
 - clash detection: https://trimsh.org/trimesh.collision.html?highlight=collision#module-trimesh.collision
 ![2022-04-07_23h32_50](https://user-images.githubusercontent.com/47977819/162323603-8d722656-dda9-4c7a-add9-b10142223b1d.png)
-- creating primitives
+- convertion of .bim files to single separate .html file with the 3d model: https://trimsh.org/trimesh.viewer.html#trimesh.viewer.scene_to_html
+![2022-04-13_19h35_29](https://user-images.githubusercontent.com/47977819/163238086-a866206b-3a76-4be9-b0d0-3930a380fd52.png)
 
 ### dotbimpy + cadquery
 
