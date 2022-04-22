@@ -179,6 +179,8 @@ version = read_file.schema_version
 
 ### View file
 
+#### Default
+
 If you want to view your file:
 
 ```python
@@ -186,6 +188,41 @@ file.view()
 ```
 ![2022-02-23_23h49_52](https://user-images.githubusercontent.com/47977819/155422920-9f0a9aa0-d3d6-442b-a0b0-084acb7e0ea7.png)
 
+#### Customize
+
+You can customize the plot that represents the .bim file. You can do it by using:
+
+```python
+figure = file.create_plotly_figure()
+```
+
+Then you get plotly's figure, which can be edited. E.g.
+
+- adding text tag:
+
+![2022-04-22_22h26_02](https://user-images.githubusercontent.com/47977819/164789418-fa632494-d0dd-4ad3-88de-7e4d14a2d8b3.png)
+
+```python
+from dotbimpy import *
+
+bim_file = File.read(r"Teapot.bim")
+figure = bim_file.create_plotly_figure()
+
+figure.update_layout(
+    scene=dict(
+        annotations=[
+            dict(
+                showarrow=False,
+                x=0,
+                y=0,
+                z=1.5,
+                text="My Teapot!"
+            )]
+    ),
+)
+
+figure.show()
+```
 
 ### Merge files
 
