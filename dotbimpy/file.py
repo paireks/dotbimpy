@@ -67,16 +67,21 @@ class File:
             bim_file.write(jsonpickle.encode(self, indent=4, unpicklable=False))
 
     def view(self):
+        figure = self.create_plotly_figure()
+        figure.show()
+
+    def create_plotly_figure(self):
         geometries = []
         for i in self.elements:
             mesh = next((x for x in self.meshes if x.mesh_id == i.mesh_id), None)
             geometries.append(self.__convert_dotbim_mesh_to_plotly(mesh_to_convert=mesh, element=i))
 
         layout = go.Layout(scene=dict(aspectmode='data'))
-        fig = go.Figure(data=[], layout=layout)
+        figure = go.Figure(data=[], layout=layout)
         for i in geometries:
-            fig.add_trace(i)
-        fig.show()
+            figure.add_trace(i)
+
+        return figure
 
     @staticmethod
     def read(path):
@@ -91,7 +96,7 @@ class File:
 
     @staticmethod
     def __convert_dotbim_mesh_to_plotly(mesh_to_convert, element):
-        colorHex = '#%02x%02x%02x' % (element.color.r, element.color.g, element.color.b)
+        color_hex = '#%02x%02x%02x' % (element.color.r, element.color.g, element.color.b)
         opacity = element.color.a / 255
 
         x = []
@@ -127,7 +132,7 @@ class File:
             k.append(mesh_to_convert.indices[counter + 2])
             counter += 3
 
-        return go.Mesh3d(x=x, y=y, z=z, i=i, j=j, k=k, color=colorHex, opacity=opacity, name=element.type,
+        return go.Mesh3d(x=x, y=y, z=z, i=i, j=j, k=k, color=color_hex, opacity=opacity, name=element.type,
                          showscale=True)
 
     @staticmethod
