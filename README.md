@@ -224,6 +224,10 @@ figure.update_layout(
 figure.show()
 ```
 
+- combining model view with charts:
+
+![image](https://user-images.githubusercontent.com/47977819/166078209-f2d381cd-00db-45a6-8539-23fc9ace32c4.png)
+
 ### Merge files
 
 If you want to merge two files together:
