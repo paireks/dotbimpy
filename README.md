@@ -37,6 +37,7 @@ To use it in Google colab add this line at the beggining of the notebook:
 ![2022-02-18_16h09_04](https://user-images.githubusercontent.com/47977819/154712470-aa4b5b44-3e23-4306-8a53-46d37494a52d.png)
 
 ```python
+# Mesh properties
 coordinates = [
     # Base
     0.0, 0.0, 0.0,
@@ -60,13 +61,18 @@ indices = [
     3, 0, 4
 ]
 
+# Instantiate Mesh object
 mesh = Mesh(mesh_id=0, coordinates=coordinates, indices=indices)
+
+# Element properties
 color = Color(r=255, g=255, b=0, a=255)
 guid = "76e051c1-1bd7-44fc-8e2e-db2b64055068"
 info = {"Name": "Pyramid"}
 rotation = Rotation(qx=0, qy=0, qz=0, qw=1.0)
 type = "Structure"
 vector = Vector(x=0, y=0, z=0)
+
+# Instantiate Element object
 element = Element(mesh_id=0,
                   vector=vector,
                   guid=guid,
@@ -75,11 +81,13 @@ element = Element(mesh_id=0,
                   type=type,
                   color=color)
 
+# File meta data
 file_info = {
     "Author": "John Doe",
     "Date": "28.09.1999"
 }
 
+# Instantiate and save File object
 file = File("1.0.0", meshes=[mesh], elements=[element], info=file_info)
 file.save("Pyramid.bim")
 ```
