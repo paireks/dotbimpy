@@ -24,6 +24,13 @@ def test_eq(mesh_id, coordinates, indices, expected):
     assert other.__eq__(original) == expected
 
 
+def test_eq_with_other_object():
+    original = Mesh(4, [0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 10.0, 0.0, 20.0], [0, 1, 2])
+    other = 2
+
+    assert original.__eq__(other) is NotImplemented
+
+
 @pytest.mark.parametrize("mesh_id, coordinates, indices, expected",
                          [(4, [0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 10.0, 0.0, 20.0], [0, 1, 2], True),
                           (3, [0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 10.0, 0.0, 20.0], [0, 1, 2], True),
@@ -36,3 +43,10 @@ def test_equals_without_mesh_id(mesh_id, coordinates, indices, expected):
 
     assert original.equals_without_mesh_id(other) == expected
     assert other.equals_without_mesh_id(original) == expected
+
+
+def test_equals_without_mesh_id_with_other_object():
+    original = Mesh(4, [0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 10.0, 0.0, 20.0], [0, 1, 2])
+    other = 2
+
+    assert original.equals_without_mesh_id(other) is NotImplemented
