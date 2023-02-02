@@ -3,7 +3,9 @@
 ## Description
 
 Open-source Python library for dotbim file format.
+
 Supports schema_version 1.0.0
+
 Read more about dotbim here: https://github.com/paireks/dotbim
 
 dotbim's website: https://dotbim.net/
