@@ -1,8 +1,8 @@
 from ..test_helper import *
+import pytest
 
 
 def test_init_pyramid():
-
     file = create_file_with_pyramid()
 
     assert file.schema_version == "1.0.0"
@@ -46,7 +46,6 @@ def test_init_pyramid():
 
 
 def test_init_cubes():
-
     file = create_file_with_cubes()
 
     assert file.schema_version == "1.0.0"
@@ -120,8 +119,37 @@ def test_init_cubes():
     ]
 
 
-def test_add_pyramid_cubes():
+@pytest.mark.parametrize("other, expected",
+                         [(File("1.0.0", meshes=[create_pyramid_mesh()], elements=[create_pyramid_element()],
+                                info={"Author": "John Doe", "Date": "28.09.1999"}), True),
+                          (File("1.0.1", meshes=[create_pyramid_mesh()], elements=[create_pyramid_element()],
+                                info={"Author": "John Doe", "Date": "28.09.1999"}), False),
+                          (File("1.0.0", meshes=[create_cube_mesh()], elements=[create_pyramid_element()],
+                                info={"Author": "John Doe", "Date": "28.09.1999"}), False),
+                          (File("1.0.0", meshes=[create_pyramid_mesh(), create_pyramid_mesh()],
+                                elements=[create_pyramid_element()],
+                                info={"Author": "John Doe", "Date": "28.09.1999"}), False),
+                          (File("1.0.0", meshes=[create_pyramid_mesh()], elements=[create_blue_cube_element()],
+                                info={"Author": "John Doe", "Date": "28.09.1999"}), False),
+                          (File("1.0.0", meshes=[create_pyramid_mesh()],
+                                elements=[create_pyramid_element(), create_pyramid_element()],
+                                info={"Author": "John Doe", "Date": "28.09.1999"}), False),
+                          (File("1.0.0", meshes=[create_pyramid_mesh()], elements=[create_pyramid_element()],
+                                info={"Author": "John Doe", "Another": "28.09.1999"}), False)])
+def test_eq(other, expected):
+    original = create_file_with_pyramid()
+    assert original.__eq__(other) == expected
+    assert other.__eq__(original) == expected
 
+
+def test_eq_with_other_object():
+    original = create_file_with_pyramid()
+    other = 2
+
+    assert original.__eq__(other) is NotImplemented
+
+
+def test_add_pyramid_cubes():
     file_a = create_file_with_pyramid()
     file_b = create_file_with_cubes()
 
@@ -146,7 +174,6 @@ def test_add_pyramid_cubes():
 
 
 def test_add_cubes_pyramid():
-
     file_a = create_file_with_cubes()
     file_b = create_file_with_pyramid()
 
@@ -192,11 +219,11 @@ def test_add_walls_truss():
     assert file_result.meshes[0] == file_a.meshes[0]
     assert file_result.meshes[1] == file_a.meshes[1]
     for i in range(5):
-        assert file_result.meshes[i+2].equals_without_mesh_id(file_b.meshes[i])
+        assert file_result.meshes[i + 2].equals_without_mesh_id(file_b.meshes[i])
 
     # Check elements
     for i in range(7):
         assert file_result.elements[i] == file_a.elements[i]
 
     for i in range(7, len(file_result.elements)):
-        assert file_result.elements[i].equals_without_mesh_id(file_b.elements[i-7])
+        assert file_result.elements[i].equals_without_mesh_id(file_b.elements[i - 7])
