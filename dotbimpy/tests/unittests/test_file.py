@@ -359,3 +359,8 @@ def test_view_multicolor():
     file = File.read("../unittests/test_files/MulticolorHouse.bim")
     file.view()
 
+
+def test_view_with_face_colors_and_without():
+    file = File.read("../unittests/test_files/CubesWithFaceColorsAndWithout.bim")
+    file.view()
+

@@ -74,7 +74,7 @@ class File:
         geometries = []
         for i in self.elements:
             mesh = next((x for x in self.meshes if x.mesh_id == i.mesh_id), None)
-            geometries.append(self.__convert_dotbim_mesh_to_plotly(mesh_to_convert=mesh, element=i))
+            geometries.extend(mesh.convert_to_plotly_meshes_with_face_colors(element=i))
 
         layout = go.Layout(scene=dict(aspectmode='data'))
         figure = go.Figure(data=[], layout=layout)
@@ -93,47 +93,6 @@ class File:
             file = File.__convert_JSON_to_file(json_dictionary)
 
             return file
-
-    @staticmethod
-    def __convert_dotbim_mesh_to_plotly(mesh_to_convert, element):
-        color_hex = '#%02x%02x%02x' % (element.color.r, element.color.g, element.color.b)
-        opacity = element.color.a / 255
-
-        x = []
-        y = []
-        z = []
-        counter = 0
-        while counter < len(mesh_to_convert.coordinates):
-            point = np.array([
-                mesh_to_convert.coordinates[counter],
-                mesh_to_convert.coordinates[counter + 1],
-                mesh_to_convert.coordinates[counter + 2]])
-
-            rotation = pyquaternion.Quaternion(
-                a=element.rotation.qw,
-                b=element.rotation.qx,
-                c=element.rotation.qy,
-                d=element.rotation.qz)
-
-            point_rotated = rotation.rotate(point)
-
-            x.append(point_rotated[0] + element.vector.x)
-            y.append(point_rotated[1] + element.vector.y)
-            z.append(point_rotated[2] + element.vector.z)
-            counter += 3
-
-        i = []
-        j = []
-        k = []
-        counter = 0
-        while counter < len(mesh_to_convert.indices):
-            i.append(mesh_to_convert.indices[counter])
-            j.append(mesh_to_convert.indices[counter + 1])
-            k.append(mesh_to_convert.indices[counter + 2])
-            counter += 3
-
-        return go.Mesh3d(x=x, y=y, z=z, i=i, j=j, k=k, color=color_hex, opacity=opacity, name=element.type,
-                         showscale=True)
 
     @staticmethod
     def __convert_JSON_to_file(json_dictionary):
@@ -272,6 +231,82 @@ class Mesh:
             return NotImplemented
 
         return self.coordinates == other.coordinates and self.indices == other.indices
+
+    def convert_to_plotly(self, element):
+        color_hex = '#%02x%02x%02x' % (element.color.r, element.color.g, element.color.b)
+        opacity = element.color.a / 255
+
+        x, y, z = self.__repack_mesh_vertices_to_xyz_lists(element)
+        i, j, k = self.__repack_mesh_indices_to_ijk_lists()
+
+        return go.Mesh3d(x=x, y=y, z=z, i=i, j=j, k=k, color=color_hex, opacity=opacity, name=element.type,
+                         showscale=True)
+
+    def convert_to_plotly_meshes_with_face_colors(self, element):
+        if not Element.check_if_has_face_colors(element):
+            return [self.convert_to_plotly(element)]
+        else:
+            plotly_meshes = []
+            face_colors_counter = 0
+            indices_counter = 0
+            while face_colors_counter < len(element.face_colors):
+                color_hex = '#%02x%02x%02x' % (element.face_colors[face_colors_counter],
+                                               element.face_colors[face_colors_counter + 1],
+                                               element.face_colors[face_colors_counter + 2])
+                opacity = element.face_colors[face_colors_counter + 3] / 255
+
+                i = [self.indices[indices_counter]]
+                j = [self.indices[indices_counter + 1]]
+                k = [self.indices[indices_counter + 2]]
+                x, y, z = self.__repack_mesh_vertices_to_xyz_lists(element)
+
+                plotly_meshes.append(go.Mesh3d(x=x, y=y, z=z, i=i, j=j, k=k, color=color_hex, opacity=opacity,
+                                               name=element.type, showscale=True))
+
+                face_colors_counter += 4
+                indices_counter += 3
+
+            return plotly_meshes
+
+    def __repack_mesh_indices_to_ijk_lists(self):
+        i = []
+        j = []
+        k = []
+        counter = 0
+        while counter < len(self.indices):
+            i.append(self.indices[counter])
+            j.append(self.indices[counter + 1])
+            k.append(self.indices[counter + 2])
+            counter += 3
+
+        return i, j, k
+
+    def __repack_mesh_vertices_to_xyz_lists(self, element):
+
+        x = []
+        y = []
+        z = []
+        counter = 0
+        while counter < len(self.coordinates):
+            point = np.array([
+                self.coordinates[counter],
+                self.coordinates[counter + 1],
+                self.coordinates[counter + 2]])
+
+            rotation = pyquaternion.Quaternion(
+                a=element.rotation.qw,
+                b=element.rotation.qx,
+                c=element.rotation.qy,
+                d=element.rotation.qz)
+
+            point_rotated = rotation.rotate(point)
+
+            x.append(point_rotated[0] + element.vector.x)
+            y.append(point_rotated[1] + element.vector.y)
+            z.append(point_rotated[2] + element.vector.z)
+            counter += 3
+
+        return x, y, z
 
 
 class Rotation:

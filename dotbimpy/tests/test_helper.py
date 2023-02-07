@@ -146,7 +146,7 @@ def create_multicolor_cube_element():
                    vector=Vector(x=-0.0, y=0.0, z=0.0),
                    rotation=Rotation(qx=0.0, qy=0.0, qz=0.0, qw=1.0),
                    guid="4d00c967-791a-42a6-a5e8-cf05831bc11d",
-                   info={"Name": "Green Cube"},
+                   info={"Name": "Multicolor Cube"},
                    type="Brick")
 
 
