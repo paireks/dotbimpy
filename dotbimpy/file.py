@@ -153,7 +153,7 @@ class File:
 
         created_elements = []
         for i in elements:
-            created_elements.append(Element(
+            new_element = Element(
                 mesh_id=i["mesh_id"],
                 vector=Vector(x=i["vector"]["x"],
                               y=i["vector"]["y"],
@@ -169,7 +169,15 @@ class File:
                             a=i["color"]["a"]),
                 type=i["type"],
                 guid=i["guid"]
-            ))
+            )
+            try:
+                new_element.face_colors = i["face_colors"]
+            except KeyError as e:
+                if str(e) == "'face_colors'":
+                    pass
+                else:
+                    raise
+            created_elements.append(new_element)
 
         file = File(schema_version=schema_version, meshes=created_meshes, elements=created_elements, info=created_info)
 
@@ -177,7 +185,7 @@ class File:
 
 
 class Element:
-    def __init__(self, mesh_id, vector, rotation, guid, type, color, info):
+    def __init__(self, mesh_id, vector, rotation, guid, type, color, info, face_colors=None):
         self.info = info
         self.color = color
         self.guid = guid
@@ -185,6 +193,8 @@ class Element:
         self.vector = vector
         self.type = type
         self.mesh_id = mesh_id
+        if face_colors is not None:
+            self.face_colors = face_colors
 
     def __eq__(self, other):
         if not isinstance(other, Element):
@@ -196,7 +206,8 @@ class Element:
                and self.rotation == other.rotation \
                and self.vector == other.vector \
                and self.type == other.type \
-               and self.mesh_id == other.mesh_id
+               and self.mesh_id == other.mesh_id \
+               and Element.__check_if_both_elements_have_the_same_face_colors(self, other)
 
     def equals_without_mesh_id(self, other):
         if not isinstance(other, Element):
@@ -207,7 +218,27 @@ class Element:
                and self.guid == other.guid \
                and self.rotation == other.rotation \
                and self.vector == other.vector \
-               and self.type == other.type
+               and self.type == other.type \
+               and Element.__check_if_both_elements_have_the_same_face_colors(self, other)
+
+    def check_if_has_face_colors(self):
+        try:
+            self.face_colors
+        except AttributeError as e:
+            if str(e) == "'Element' object has no attribute 'face_colors'":
+                return False
+            else:
+                raise
+        return True
+
+    @staticmethod
+    def __check_if_both_elements_have_the_same_face_colors(first_element, second_element):
+        if first_element.check_if_has_face_colors() and second_element.check_if_has_face_colors():
+            return first_element.face_colors == second_element.face_colors
+        if not first_element.check_if_has_face_colors() and not second_element.check_if_has_face_colors():
+            return True
+        else:
+            return False
 
 
 class Color:

@@ -121,6 +121,60 @@ def test_init_cubes():
     ]
 
 
+def test_init_cubes_with_face_colors_and_without():
+    file = create_file_with_cubes_with_face_colors_and_without()
+
+    assert file.schema_version == "1.1.0"
+    assert file.info == {"Author": "John Doe"}
+
+    red_cube = create_red_cube_element()
+    multicolor_cube = create_multicolor_cube_element()
+    blue_cube = create_blue_cube_element()
+
+    assert len(file.elements) == 3
+    assert file.elements[0] == red_cube
+    assert file.elements[1] == multicolor_cube
+    assert file.elements[2] == blue_cube
+
+    assert len(file.meshes) == 1
+    assert file.meshes[0].mesh_id == 0
+    assert file.meshes[0].coordinates == [
+        0.0, 0.0, 0.0,
+        10.0, 0.0, 0.0,
+        10.0, 0.0, 20.0,
+        0.0, 0.0, 20.0,
+        0.0, 30.0, 0.0,
+        10.0, 30.0, 0.0,
+        10.0, 30.0, 20.0,
+        0.0, 30.0, 20.0
+    ]
+    assert file.meshes[0].indices == [
+        # Front side
+        0, 1, 2,
+        0, 2, 3,
+
+        # Bottom side
+        0, 1, 4,
+        1, 4, 5,
+
+        # Left side
+        0, 4, 3,
+        4, 3, 7,
+
+        # Right side
+        1, 2, 5,
+        2, 5, 6,
+
+        # Top side
+        2, 3, 7,
+        2, 6, 7,
+
+        # Back side
+        4, 5, 7,
+        5, 6, 7
+    ]
+
+
 @pytest.mark.parametrize("other, expected",
                          [(File("1.0.0", meshes=[create_pyramid_mesh()], elements=[create_pyramid_element()],
                                 info={"Author": "John Doe", "Date": "28.09.1999"}), True),
@@ -186,6 +240,15 @@ def test_save_read_cubes():
 
     assert read_file == file
     os.remove("Cubes.bim")
+
+
+def test_save_read_cubes_with_face_colors_and_without():
+    file = create_file_with_cubes_with_face_colors_and_without()
+    file.save("CubesWithFaceColorsAndWithout.bim")
+    read_file = File.read("CubesWithFaceColorsAndWithout.bim")
+
+    assert read_file == file
+    os.remove("CubesWithFaceColorsAndWithout.bim")
 
 
 def test_save_exceptions():
@@ -289,5 +352,10 @@ def test_create_plotly_figure():
 
 def test_view():
     file = File.read("../unittests/test_files/BricksRotated.bim")
+    file.view()
+
+
+def test_view_multicolor():
+    file = File.read("../unittests/test_files/MulticolorHouse.bim")
     file.view()
 
