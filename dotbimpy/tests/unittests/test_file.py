@@ -188,6 +188,12 @@ def test_save_read_cubes():
     os.remove("Cubes.bim")
 
 
+def test_save_exceptions():
+    file = create_file_with_cubes()
+    with pytest.raises(Exception):
+        file.save("Wrong.path")
+
+
 def test_add_pyramid_cubes():
     file_a = create_file_with_pyramid()
     file_b = create_file_with_cubes()
@@ -266,3 +272,22 @@ def test_add_walls_truss():
 
     for i in range(7, len(file_result.elements)):
         assert file_result.elements[i].equals_without_mesh_id(file_b.elements[i - 7])
+
+
+def test_create_plotly_figure():
+    bim_file = File.read(os.path.join(os.path.dirname(os.path.realpath(__file__)), "test_files\\MultipleMeshes.bim"))
+    figure = bim_file.create_plotly_figure()
+    actual = str(figure.to_json())
+
+    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "text_files\\plotly_multiple_meshes.txt")) as f:
+        expected = f.read()
+
+    bim_file.view()
+
+    assert actual == expected
+
+
+def test_view():
+    file = File.read("../unittests/test_files/BricksRotated.bim")
+    file.view()
+
