@@ -232,7 +232,7 @@ class Mesh:
 
         return self.coordinates == other.coordinates and self.indices == other.indices
 
-    def convert_to_plotly(self, element):
+    def __convert_to_plotly(self, element):
         color_hex = '#%02x%02x%02x' % (element.color.r, element.color.g, element.color.b)
         opacity = element.color.a / 255
 
@@ -244,7 +244,7 @@ class Mesh:
 
     def convert_to_plotly_meshes_with_face_colors(self, element):
         if not Element.check_if_has_face_colors(element):
-            return [self.convert_to_plotly(element)]
+            return [self.__convert_to_plotly(element)]
         else:
             plotly_meshes = []
             face_colors_counter = 0
