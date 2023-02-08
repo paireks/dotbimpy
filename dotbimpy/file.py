@@ -46,13 +46,16 @@ class File:
 
         for i in other.elements:
             new_id = i.mesh_id + max_mesh_id + 1
-            new_elements.append(Element(mesh_id=new_id,
-                                        color=copy.deepcopy(i.color),
-                                        rotation=copy.deepcopy(i.rotation),
-                                        vector=copy.deepcopy(i.vector),
-                                        info=i.info.copy(),
-                                        type=i.type,
-                                        guid=i.guid))
+            new_element = Element(mesh_id=new_id,
+                                  color=copy.deepcopy(i.color),
+                                  rotation=copy.deepcopy(i.rotation),
+                                  vector=copy.deepcopy(i.vector),
+                                  info=i.info.copy(),
+                                  type=i.type,
+                                  guid=i.guid)
+            if i.check_if_has_face_colors():
+                new_element.face_colors = copy.deepcopy(i.face_colors)
+            new_elements.append(new_element)
 
         return File(schema_version=new_schema_version,
                     info=new_file_info,
@@ -74,7 +77,7 @@ class File:
         geometries = []
         for i in self.elements:
             mesh = next((x for x in self.meshes if x.mesh_id == i.mesh_id), None)
-            geometries.append(self.__convert_dotbim_mesh_to_plotly(mesh_to_convert=mesh, element=i))
+            geometries.extend(mesh.convert_to_plotly_meshes_with_face_colors(element=i))
 
         layout = go.Layout(scene=dict(aspectmode='data'))
         figure = go.Figure(data=[], layout=layout)
@@ -95,47 +98,6 @@ class File:
             return file
 
     @staticmethod
-    def __convert_dotbim_mesh_to_plotly(mesh_to_convert, element):
-        color_hex = '#%02x%02x%02x' % (element.color.r, element.color.g, element.color.b)
-        opacity = element.color.a / 255
-
-        x = []
-        y = []
-        z = []
-        counter = 0
-        while counter < len(mesh_to_convert.coordinates):
-            point = np.array([
-                mesh_to_convert.coordinates[counter],
-                mesh_to_convert.coordinates[counter + 1],
-                mesh_to_convert.coordinates[counter + 2]])
-
-            rotation = pyquaternion.Quaternion(
-                a=element.rotation.qw,
-                b=element.rotation.qx,
-                c=element.rotation.qy,
-                d=element.rotation.qz)
-
-            point_rotated = rotation.rotate(point)
-
-            x.append(point_rotated[0] + element.vector.x)
-            y.append(point_rotated[1] + element.vector.y)
-            z.append(point_rotated[2] + element.vector.z)
-            counter += 3
-
-        i = []
-        j = []
-        k = []
-        counter = 0
-        while counter < len(mesh_to_convert.indices):
-            i.append(mesh_to_convert.indices[counter])
-            j.append(mesh_to_convert.indices[counter + 1])
-            k.append(mesh_to_convert.indices[counter + 2])
-            counter += 3
-
-        return go.Mesh3d(x=x, y=y, z=z, i=i, j=j, k=k, color=color_hex, opacity=opacity, name=element.type,
-                         showscale=True)
-
-    @staticmethod
     def __convert_JSON_to_file(json_dictionary):
 
         schema_version = json_dictionary["schema_version"]
@@ -153,7 +115,7 @@ class File:
 
         created_elements = []
         for i in elements:
-            created_elements.append(Element(
+            new_element = Element(
                 mesh_id=i["mesh_id"],
                 vector=Vector(x=i["vector"]["x"],
                               y=i["vector"]["y"],
@@ -169,7 +131,15 @@ class File:
                             a=i["color"]["a"]),
                 type=i["type"],
                 guid=i["guid"]
-            ))
+            )
+            try:
+                new_element.face_colors = i["face_colors"]
+            except KeyError as e:
+                if str(e) == "'face_colors'":
+                    pass
+                else:
+                    raise
+            created_elements.append(new_element)
 
         file = File(schema_version=schema_version, meshes=created_meshes, elements=created_elements, info=created_info)
 
@@ -177,7 +147,7 @@ class File:
 
 
 class Element:
-    def __init__(self, mesh_id, vector, rotation, guid, type, color, info):
+    def __init__(self, mesh_id, vector, rotation, guid, type, color, info, face_colors=None):
         self.info = info
         self.color = color
         self.guid = guid
@@ -185,6 +155,8 @@ class Element:
         self.vector = vector
         self.type = type
         self.mesh_id = mesh_id
+        if face_colors is not None:
+            self.face_colors = face_colors
 
     def __eq__(self, other):
         if not isinstance(other, Element):
@@ -196,7 +168,8 @@ class Element:
                and self.rotation == other.rotation \
                and self.vector == other.vector \
                and self.type == other.type \
-               and self.mesh_id == other.mesh_id
+               and self.mesh_id == other.mesh_id \
+               and Element.__check_if_both_elements_have_the_same_face_colors(self, other)
 
     def equals_without_mesh_id(self, other):
         if not isinstance(other, Element):
@@ -207,7 +180,27 @@ class Element:
                and self.guid == other.guid \
                and self.rotation == other.rotation \
                and self.vector == other.vector \
-               and self.type == other.type
+               and self.type == other.type \
+               and Element.__check_if_both_elements_have_the_same_face_colors(self, other)
+
+    def check_if_has_face_colors(self):
+        try:
+            self.face_colors
+        except AttributeError as e:
+            if str(e) == "'Element' object has no attribute 'face_colors'":
+                return False
+            else:
+                raise
+        return True
+
+    @staticmethod
+    def __check_if_both_elements_have_the_same_face_colors(first_element, second_element):
+        if first_element.check_if_has_face_colors() and second_element.check_if_has_face_colors():
+            return first_element.face_colors == second_element.face_colors
+        if not first_element.check_if_has_face_colors() and not second_element.check_if_has_face_colors():
+            return True
+        else:
+            return False
 
 
 class Color:
@@ -241,6 +234,82 @@ class Mesh:
             return NotImplemented
 
         return self.coordinates == other.coordinates and self.indices == other.indices
+
+    def __convert_to_plotly(self, element):
+        color_hex = '#%02x%02x%02x' % (element.color.r, element.color.g, element.color.b)
+        opacity = element.color.a / 255
+
+        x, y, z = self.__repack_mesh_vertices_to_xyz_lists(element)
+        i, j, k = self.__repack_mesh_indices_to_ijk_lists()
+
+        return go.Mesh3d(x=x, y=y, z=z, i=i, j=j, k=k, color=color_hex, opacity=opacity, name=element.type,
+                         showscale=True)
+
+    def convert_to_plotly_meshes_with_face_colors(self, element):
+        if not Element.check_if_has_face_colors(element):
+            return [self.__convert_to_plotly(element)]
+        else:
+            plotly_meshes = []
+            face_colors_counter = 0
+            indices_counter = 0
+            while face_colors_counter < len(element.face_colors):
+                color_hex = '#%02x%02x%02x' % (element.face_colors[face_colors_counter],
+                                               element.face_colors[face_colors_counter + 1],
+                                               element.face_colors[face_colors_counter + 2])
+                opacity = element.face_colors[face_colors_counter + 3] / 255
+
+                i = [self.indices[indices_counter]]
+                j = [self.indices[indices_counter + 1]]
+                k = [self.indices[indices_counter + 2]]
+                x, y, z = self.__repack_mesh_vertices_to_xyz_lists(element)
+
+                plotly_meshes.append(go.Mesh3d(x=x, y=y, z=z, i=i, j=j, k=k, color=color_hex, opacity=opacity,
+                                               name=element.type, showscale=True))
+
+                face_colors_counter += 4
+                indices_counter += 3
+
+            return plotly_meshes
+
+    def __repack_mesh_indices_to_ijk_lists(self):
+        i = []
+        j = []
+        k = []
+        counter = 0
+        while counter < len(self.indices):
+            i.append(self.indices[counter])
+            j.append(self.indices[counter + 1])
+            k.append(self.indices[counter + 2])
+            counter += 3
+
+        return i, j, k
+
+    def __repack_mesh_vertices_to_xyz_lists(self, element):
+
+        x = []
+        y = []
+        z = []
+        counter = 0
+        while counter < len(self.coordinates):
+            point = np.array([
+                self.coordinates[counter],
+                self.coordinates[counter + 1],
+                self.coordinates[counter + 2]])
+
+            rotation = pyquaternion.Quaternion(
+                a=element.rotation.qw,
+                b=element.rotation.qx,
+                c=element.rotation.qy,
+                d=element.rotation.qz)
+
+            point_rotated = rotation.rotate(point)
+
+            x.append(point_rotated[0] + element.vector.x)
+            y.append(point_rotated[1] + element.vector.y)
+            z.append(point_rotated[2] + element.vector.z)
+            counter += 3
+
+        return x, y, z
 
 
 class Rotation:
