@@ -2,13 +2,13 @@ from distutils.core import setup
 setup(
   name='dotbimpy',
   packages=['dotbimpy'],
-  version='0.0.7',
+  version='0.1.0',
   license='MIT',
   description='Python library for dotbim',
   author='Wojciech',
   author_email='w.radaczynski@gmail.com',
   url='https://github.com/paireks/dotbimpy',
-  download_url='https://github.com/paireks/dotbimpy/archive/refs/tags/v_0_0_7.tar.gz',
+  download_url='https://github.com/paireks/dotbimpy/archive/refs/tags/v_0_1_0.tar.gz',
   keywords=[],
   install_requires=[
           'jsonpickle',

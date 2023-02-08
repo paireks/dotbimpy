@@ -1,4 +1,4 @@
-# dotbimpy (Version 0.0.7)
+# dotbimpy (Version 0.1.0)
 
 ## Description
 
