@@ -286,3 +286,26 @@ def test_equals_without_mesh_id_with_other_object():
     other = 2
 
     assert original.equals_without_mesh_id(other) is NotImplemented
+
+
+@pytest.mark.parametrize("element, expected",
+                         [(Element(mesh_id=0,
+                                   color=Color(31, 30, 50, 4),
+                                   face_colors=[255, 0, 0, 255, 135, 206, 235, 255, 255, 255, 255, 255],
+                                   guid="8f6bc6d0-4f24-4bd0-917a-82ab1c22a5bb",
+                                   vector=Vector(5, 3, 2),
+                                   rotation=Rotation(0.6397929577145492, 0.1062698214791025, -0.1247209304773680,
+                                                     -0.750877077691500),
+                                   type="Beam",
+                                   info={"Name": "Pyramid"}), True),
+                          (Element(mesh_id=0,
+                                   color=Color(31, 30, 50, 4),
+                                   guid="8f6bc6d0-4f24-4bd0-917a-82ab1c22a5bb",
+                                   vector=Vector(5, 3, 2),
+                                   rotation=Rotation(0.6397929577145492, 0.1062698214791025, -0.1247209304773680,
+                                                     -0.750877077691500),
+                                   type="Beam",
+                                   info={"Name": "Pyramid"}), False),
+                         ])
+def test_check_if_has_face_colors(element, expected):
+    assert element.check_if_has_face_colors() == expected
