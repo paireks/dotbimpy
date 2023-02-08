@@ -302,6 +302,48 @@ def test_add_cubes_pyramid():
     assert file_result.elements[3].equals_without_mesh_id(file_b.elements[0]) and file_result.elements[3].mesh_id == 1
 
 
+def test_add_multicolor_cubes_pyramid():
+    file_a = create_file_with_cubes_with_face_colors_and_without()
+    file_b = create_file_with_pyramid()
+
+    file_result = file_a + file_b
+
+    assert file_result.schema_version == file_a.schema_version
+    assert file_result.info == file_a.info
+    assert file_result.meshes[1].mesh_id == 1
+
+    # Check meshes
+    assert file_result.meshes[0] == file_a.meshes[0]
+    assert file_result.meshes[1].equals_without_mesh_id(file_b.meshes[0])
+
+    # Check elements
+    assert file_result.elements[0] == file_a.elements[0]
+    assert file_result.elements[1] == file_a.elements[1]
+    assert file_result.elements[2] == file_a.elements[2]
+    assert file_result.elements[3].equals_without_mesh_id(file_b.elements[0]) and file_result.elements[3].mesh_id == 1
+
+
+def test_add_multicolor_pyramid_cubes():
+    file_a = create_file_with_pyramid()
+    file_b = create_file_with_cubes_with_face_colors_and_without()
+
+    file_result = file_a + file_b
+
+    assert file_result.schema_version == file_a.schema_version
+    assert file_result.info == file_a.info
+    assert file_result.meshes[1].mesh_id == 1
+
+    # Check meshes
+    assert file_result.meshes[0] == file_a.meshes[0]
+    assert file_result.meshes[1].equals_without_mesh_id(file_b.meshes[0])
+
+    # Check elements
+    assert file_result.elements[0] == file_a.elements[0]
+    assert file_result.elements[1].equals_without_mesh_id(file_b.elements[0]) and file_result.elements[1].mesh_id == 1
+    assert file_result.elements[2].equals_without_mesh_id(file_b.elements[1]) and file_result.elements[2].mesh_id == 1
+    assert file_result.elements[3].equals_without_mesh_id(file_b.elements[2]) and file_result.elements[3].mesh_id == 1
+
+
 def test_add_walls_truss__check_if_originals_changed():
     file_a = File.read("test_files/WallsWithBeams.bim")
     file_b = File.read("test_files/Truss.bim")

@@ -46,13 +46,16 @@ class File:
 
         for i in other.elements:
             new_id = i.mesh_id + max_mesh_id + 1
-            new_elements.append(Element(mesh_id=new_id,
-                                        color=copy.deepcopy(i.color),
-                                        rotation=copy.deepcopy(i.rotation),
-                                        vector=copy.deepcopy(i.vector),
-                                        info=i.info.copy(),
-                                        type=i.type,
-                                        guid=i.guid))
+            new_element = Element(mesh_id=new_id,
+                                  color=copy.deepcopy(i.color),
+                                  rotation=copy.deepcopy(i.rotation),
+                                  vector=copy.deepcopy(i.vector),
+                                  info=i.info.copy(),
+                                  type=i.type,
+                                  guid=i.guid)
+            if i.check_if_has_face_colors():
+                new_element.face_colors = copy.deepcopy(i.face_colors)
+            new_elements.append(new_element)
 
         return File(schema_version=new_schema_version,
                     info=new_file_info,
