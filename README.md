@@ -10,6 +10,12 @@ dotbim's website: https://dotbim.net/
 
 Here you can find small manual for developers regarding development of tools that will work with .bim file format: https://github.com/paireks/dotbim/blob/master/DeveloperTips.md
 
+## Alternative
+
+Check another dotbim Python package called dotbim-community, which is the Pydantic-based fork: https://github.com/thekaushikls/dotbim-community
+
+Created by Kaushik: https://github.com/thekaushikls
+
 ## Installation
 
 ### Python
