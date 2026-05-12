@@ -1,4 +1,4 @@
-from dotbimpy import *
+from dotbimpy import Color
 import pytest
 
 
@@ -11,13 +11,17 @@ def test_init():
     assert color.a == 4
 
 
-@pytest.mark.parametrize("r, g, b, a, expected",
-                         [(31, 30, 50, 4, True),
-                          (32, 30, 50, 4, False),
-                          (31, 29, 50, 4, False),
-                          (31, 30, 51, 4, False),
-                          (31, 30, 50, 5, False),
-                          (32, 29, 51, 5, False)])
+@pytest.mark.parametrize(
+    "r, g, b, a, expected",
+    [
+        (31, 30, 50, 4, True),
+        (32, 30, 50, 4, False),
+        (31, 29, 50, 4, False),
+        (31, 30, 51, 4, False),
+        (31, 30, 50, 5, False),
+        (32, 29, 51, 5, False),
+    ],
+)
 def test_eq(r, g, b, a, expected):
     original = Color(31, 30, 50, 4)
     other = Color(r, g, b, a)
@@ -30,4 +34,4 @@ def test_eq_with_other_object():
     original = Color(31, 30, 50, 4)
     other = 2
 
-    assert original.__eq__(other) is NotImplemented
+    assert original.__eq__(other) is False
